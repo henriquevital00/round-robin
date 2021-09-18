@@ -55,10 +55,10 @@ $ git clone https://github.com/henriquevital00/simulation-cpu.git
 $ cd simulation-cpu
 
 # You need to install the compiler
-$ sudo apt-get install g++
+$ sudo apt-get install gcc
 
 # Compile project
-$ g++ -o main source/*.c main.c
+$ gcc -o main source/*.c main.c
 
 # In both Windows and Linux, the execution is done by executing the following lines in the terminal, or using an IDE of your choice.
 

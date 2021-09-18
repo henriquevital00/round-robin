@@ -38,7 +38,7 @@ Process* input()
 }
 
 void clearProcess(Process* processes){
-    for (int i = 0; i < numberProcesses; i++)
+    for (int i = 0; i < numberProcess; i++)
     {
         free(processes[i].interruptions);
     }
