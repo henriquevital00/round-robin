@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "../include/process.h"
 
-Process* receberInput();
+Process* input();
+void clearProcess(Process* processes);
 
 #endif

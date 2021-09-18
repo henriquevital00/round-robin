@@ -5,6 +5,6 @@
 #include <stdlib.h>
 #include "../include/process.h"
 
-void calcula(Process* arrayProcess);
+void calculate(Process* arrayProcess);
 
 #endif

@@ -1,17 +1,14 @@
 #include "../include/input.h"
 #include "../include/process.h"
 
-
-void calcula(Process *arrayProcess)
+void calculate(Process *processes)
 {
-    printf("%d\n", arrayProcess);
-    int n = sizeof(arrayProcess) / sizeof(arrayProcess[0]);
-
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < numberProcess; i++)
     {
-        int sizeInterruptions = sizeof(arrayProcess->interruptions) / sizeof(arrayProcess->interruptions[0]);
 
-        printf("interruptions %d\n", arrayProcess[i].duration);
-        
+        for (int j = 0; j < processes[i].numberIO; j++)
+        {
+            printf("interruptions: %d\n", processes[i].interruptions[j]);
+        }
     }
 }

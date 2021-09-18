@@ -7,6 +7,9 @@
 
 int main()
 {
-    calcula(receberInput());
+    Process* processes = input(); 
+    calculate(processes);
+    clearProcess(processes);
+    
     return 0;
 }

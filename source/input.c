@@ -1,16 +1,12 @@
 #include "../include/input.h"
 #include "../include/process.h"
 
-Process* arrayProcessos;
-Process* receberInput()
+Process* input()
 {
-    int numberProcess = 0;
-    int numberIO = 0;
-
     printf("Quantos processos você deseja inserir? \n");
     scanf("%d", &numberProcess);
 
-    Process arrayProcess[numberProcess];
+    Process* processes = malloc(sizeof(Process) * numberProcess);
 
     for (int i = 0; i < numberProcess; i++)
     {
@@ -24,20 +20,27 @@ Process* receberInput()
         scanf("%d", &process.arrival);
 
         printf("Quantas I/O existem no processo? \n");
-        scanf("%d", &numberIO);
+        scanf("%d", &process.numberIO);
 
-        int arrayIO[numberIO];
+        int* arrayIO = malloc(sizeof(int) * process.numberIO);
 
-        for (int j = 0; j < numberIO; j++)
+        for (int j = 0; j < process.numberIO; j++)
         {
             printf("Quando ocorre a I/O? \n");
             scanf("%d", &arrayIO[j]);
         }
         process.interruptions = arrayIO;
 
-        arrayProcess[i] = process;
+        processes[i] = process;
     }
 
-    arrayProcessos = arrayProcess;
-    return arrayProcessos;
+    return processes;
+}
+
+void clearProcess(Process* processes){
+    for (int i = 0; i < sizeof(processes)/sizeof(Process); i++)
+    {
+        free(processes[i].interruptions);
+    }
+    free(processes);
 }

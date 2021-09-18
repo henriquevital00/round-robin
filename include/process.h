@@ -6,7 +6,9 @@ typedef struct
     int duration;
     int arrival;
     int *interruptions;
-
+    int numberIO;
 } Process;
+
+int numberProcess;
 
 #endif
