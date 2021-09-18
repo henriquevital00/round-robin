@@ -52,7 +52,7 @@ Project consists ...
 $ git clone https://github.com/henriquevital00/simulation-cpu.git
 
 # Access the project folder in your terminal / cmd
-$ cd wallet-in-c
+$ cd simulation-cpu
 
 # You need to install the compiler
 $ sudo apt-get install g++
@@ -69,5 +69,7 @@ $ ./main
 
 ## 🤖 Authors
 
-[Antonio Gustavo](https://github.com/antuniooh)           |  [Henrique Vital](https://github.com/henriquevital00)           |  [Gabriel Bueno](https://github.com/GabrielBueno200)           
-<img src="https://avatars.githubusercontent.com/u/51217271?v=4" alt="drawing" width="150"/>  |  <img src="https://avatars.githubusercontent.com/u/48650626?v=4" alt="drawing" width="150"/>  |  <img src="https://avatars.githubusercontent.com/u/56837996?v=4" alt="drawing" width="150"/>
+[Antonio Gustavo](https://github.com/antuniooh)           |  [Henrique Vital](https://github.com/henriquevital00)           |  [Gabriel Bueno](https://github.com/GabrielBueno200)
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://avatars.githubusercontent.com/u/51217271?v=4" alt="drawing" width="150"/>  |  <img src="https://avatars.githubusercontent.com/u/48650626?v=4" alt="drawing" width="150"/>| <img src="https://avatars.githubusercontent.com/u/56837996?v=4" alt="drawing" width="150"/>
+22.119.001-0 | 22.119.078-8 | 22.119.077-0
