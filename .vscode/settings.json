@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "algorithm.h": "c"
+        "*.html": "njk",
+        "algorithm.h": "c",
+        "output.h": "c"
     }
 }
