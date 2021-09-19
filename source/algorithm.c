@@ -1,6 +1,5 @@
 #include "../include/input.h"
 #include "../include/process.h"
-#include "../include/stack.h"
 
 void calculate(Process *processes)
 {

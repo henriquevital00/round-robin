@@ -11,6 +11,7 @@ Process* input()
     for (int i = 0; i < numberProcess; i++)
     {
         Process process;
+        process.number = i + 1;
 
         printf("Criando o processo %d \n", i + 1);
         printf("Qual a duração do processo? \n");

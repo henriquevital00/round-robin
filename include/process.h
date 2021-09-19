@@ -3,6 +3,7 @@
 
 typedef struct
 {
+    int number;
     int duration;
     int arrival;
     int *interruptions;
