@@ -7,10 +7,10 @@ void printStatus(CPU *cpu)
     printf("%s \n", cpu->description);
     printf("Fila:  ");
 
-    for (int i = 0; i < cpu->sizeQueueProcess; i++)
+    for (int i = 0; i < cpu->sizeprocessQueue; i++)
     {
-        printf("P%d(%d) - ", cpu->queueProcess->number, cpu->queueProcess->duration);
+        printf("P%d(%d) - ", cpu->processQueue->number, cpu->processQueue->duration);
     }
     printf("\n");
-    printf("Na CPU: P%d\n \n", cpu->processInCpu->number);
+    printf("Na CPU: P%d\n \n", cpu->runningProcess->number);
 }

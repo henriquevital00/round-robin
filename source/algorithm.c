@@ -10,16 +10,8 @@ Percorre a fila circularmente, alocando a CPU a cada processo por 1 quantum de t
 O processo pode parar sua execução antes de terminar seu 1 quantum de tempo
 */
 
-#define MAX_ARRIVAL 99999999
-
-void calculate(Process *processes)
-{
-    CPU* cpuTimes = malloc(sizeof(CPU) * 15);
-
-    CPU actualProcess;
-    int quantum = 4;
-
-    int minArrival = MAX_ARRIVAL;
+CPU getFirstProcessInQueue(Process* processes){
+    int minArrival = processes[0].arrival;
     Process* firstProcess = NULL;
 
     // check based on arrival
@@ -30,15 +22,20 @@ void calculate(Process *processes)
             firstProcess = &processes[i];
         }
     }
-    actualProcess.time = 0;
-    actualProcess.description = "início";
-    actualProcess.processInCpu = firstProcess;
-    actualProcess.queueProcess =  firstProcess;
-    actualProcess.sizeQueueProcess = 1;
+    CPU currentProcess = {0, "inicio", 1, firstProcess, firstProcess};
+    return currentProcess;
+}
 
-    cpuTimes[actualProcess.time] = actualProcess;
 
-    
+
+void calculate(Process *processes)
+{
+    CPU* cpuTimes = malloc(sizeof(CPU) * 15);
+
+    CPU currentProcess = getFirstProcessInQueue(processes);
+    int quantum = 4;
+
+    cpuTimes[currentProcess.time] = currentProcess;
 
     printStatus(cpuTimes);
 }

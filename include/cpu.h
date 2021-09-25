@@ -6,9 +6,9 @@ typedef struct
 {
     int time;
     char* description;
-    int sizeQueueProcess;
-    Process* queueProcess;
-    Process* processInCpu;
+    int sizeprocessQueue;
+    Process* processQueue;
+    Process* runningProcess;
 } CPU;
 
 #endif
