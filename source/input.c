@@ -12,10 +12,12 @@ Process* input()
     {
         Process process;
         process.number = i + 1;
+        process.quantumCount = 0;
 
         printf("Criando o processo %d \n", i + 1);
         printf("Qual a duração do processo? \n");
         scanf("%d", &process.duration);
+        process.startDuration = process.duration;
 
         printf("Qual a chegada do processo? \n");
         scanf("%d", &process.arrival);
@@ -34,6 +36,7 @@ Process* input()
 
         processes[i] = process;
     }
+    printf("\n\n");
 
     return processes;
 }

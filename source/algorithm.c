@@ -1,7 +1,5 @@
 #include "../include/input.h"
 #include "../include/process.h"
-#include "../include/cpu.h"
-#include "../include/output.h"
 #include "../include/queue.h"
 
 /*
@@ -21,43 +19,68 @@ int calculateTotalDuration(Process *processes)
     return duration;
 }
 
-void setProcessOnTime(Process *processes, int time)
+bool setProcessOnTime(Process *processes, int time)
 {
     bool hasRunningProcess = first() != NULL;
 
-    if (hasRunningProcess)
+    for (int n = 0; n < numberProcess; n++)
     {
-        Process current = *(first());
-        for (int n = 0; n < numberProcess; n++)
+        Process process = processes[n];
+        if (process.arrival == time)
         {
-            Process process = processes[n];
-            if (process.arrival == time)
+            if (hasRunningProcess)
             {
-                removeData();
+                Process current = *(first());
                 insert(process);
-                insert(current);
-                return;
             }
+            else
+            {
+                insert(process);
+            }
+            printf("Chegada do processo: P%d\n", process.number);
+
+            return true;
         }
-    }
-    else
-    {
-        insert(processes[0]);
     }
 }
 
-bool hasInterruption(Process current, int time)
+bool hasInterruption(Process current, int quantum, bool flagTime)
 {
+
+    if (current.quantumCount == quantum)
+    {
+        printf("fim de quantum: P%d\n", current.number);
+        removeData();
+        insert(current);
+        return true;
+    }
     for (int i = 0; i < current.numberIO; i++)
     {
-        if (current.interruptions[i] == time)
+        if (current.interruptions[i] == (current.startDuration - current.duration))
         {
+            printf("operação de I/O: P%d\n", current.number);
+            current.interruptions[i] = 0;
+            if (flagTime)
+            {
+                printf("P%d (%d) - \n\n", processArray[size() - 1].number, processArray[size() - 1].duration);
+
+                //Process lastData = processArray[size() - 1];
+                //processArray[size() - 1] = current;
+                //removeData();
+                //insert(lastData);
+            }
             removeData();
             insert(current);
             return true;
         }
     }
     return false;
+}
+
+void incrementProcess(Process *process)
+{
+    process->duration--;
+    process->quantumCount++;
 }
 
 void roundRobbin(Process *processes)
@@ -67,31 +90,42 @@ void roundRobbin(Process *processes)
 
     for (int t = 0; t < totalDuration; t++)
     {
-        showQueue();
-        printf("\n\nTime: %d\n", t);
-        setProcessOnTime(processes, t);
+        printf("\n\nTempo: %d - ", t);
+        bool arriveProcess = setProcessOnTime(processes, t);
+
         if (!isEmpty())
         {
-            Process* current = first();
-            printf("Currennt process: %d\n", current->number);
-            if (hasInterruption(*current, t))
-                break;
+            Process *current = first();
 
-            if (!--current->duration)
-                removeData();
+            if (hasInterruption(*current, quantum, arriveProcess))
+            {
+                current->quantumCount = 0;
+                showQueue();
+            }
+            else
+            {
+
+                showQueue();
+
+                if (current->duration == 0)
+                {
+                    printf("fim de processo: P%d\n", current->number);
+                    removeData();
+                }
+            }
+            printf("Na CPU: P%d \n", current->number);
+            incrementProcess(current);
         }
-        showQueue();
+        else if (t > totalDuration)
+        {
+            break;
+        }
     }
 }
 
 void calculate(Process *processes)
 {
     createQueue();
-    int totalDuration = calculateTotalDuration(processes);
-    CPU *cpuTimes = malloc(sizeof(CPU) * totalDuration);
 
     roundRobbin(processes);
-    //cpuTimes[currentProcess.time] = currentProcess;
-
-    //printStatus(cpuTimes);
 }

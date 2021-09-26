@@ -9,7 +9,7 @@ void createQueue()
     processArray = malloc(sizeof(Process) * numberProcess);
 }
 
-Process* first()
+Process *first()
 {
     if (!isEmpty())
         return processArray;
@@ -37,21 +37,23 @@ Process removeData()
     if (!isEmpty())
     {
         Process data = *(first());
-        for (int i = size() - 1; i > 0; i--)
-            processArray[i - 1] = processArray[i];
+
+        for (int i = 0; i < size() - 1; i++)
+        {
+            processArray[i] = processArray[i+1];
+        }
 
         itemCount--;
         return data;
     }
-    return;
 }
 
 void showQueue()
 {
-    printf("Queue: ");
+    printf("Fila: ");
     for (int i = 0; i < size(); i++)
     {
-        printf("%d ", processArray[i].number);
+        printf("P%d (%d) - ", processArray[i].number, processArray[i].duration);
     }
     printf("\n");
 }
