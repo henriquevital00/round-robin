@@ -77,7 +77,7 @@ void roundRobbin(Process *processes)
             if (hasInterruption(*current, t))
                 break;
 
-            if (!current->duration--)
+            if (!--current->duration)
                 removeData();
         }
         showQueue();
