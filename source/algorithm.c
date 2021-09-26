@@ -47,14 +47,6 @@ bool setProcessOnTime(Process *processes, int time)
 
 bool hasInterruption(Process current, int quantum, bool flagTime)
 {
-
-    if (current.quantumCount == quantum)
-    {
-        printf("fim de quantum: P%d\n", current.number);
-        removeData();
-        insert(current);
-        return true;
-    }
     for (int i = 0; i < current.numberIO; i++)
     {
         if (current.interruptions[i] == (current.startDuration - current.duration))
@@ -76,13 +68,21 @@ bool hasInterruption(Process current, int quantum, bool flagTime)
             return true;
         }
     }
+    if (current.quantumCount == quantum)
+    {
+        printf("fim de quantum: P%d\n", current.number);
+        removeData();
+        insert(current);
+        return true;
+    }
     return false;
 }
 
 void incrementProcess(Process *process, int time)
 {
     // processo acabou de começar
-    if(process->duration == process->startDuration){
+    if (process->duration == process->startDuration)
+    {
         process->startTime = time;
     }
     process->duration--;
@@ -94,6 +94,8 @@ void roundRobbin(Process *processes)
     int totalDuration = calculateTotalDuration(processes);
     int quantum = 4;
 
+    float timeWaitAvg = 0.0f;
+    int totalWaitTime = 0;
 
     for (int t = 0; t < totalDuration + 1; t++)
     {
@@ -118,7 +120,9 @@ void roundRobbin(Process *processes)
                 {
                     printf("fim de processo: P%d\n", current->number);
                     current->finalTime = t;
-                    printf("Tempo de espera: %d ms\n", current->finalTime - current->startTime);
+                    int waitTime = (current->finalTime - current->startTime);
+                    totalWaitTime += waitTime;
+                    printf("Tempo de espera: %d ms\n", waitTime);
                     removeData();
                 }
             }
@@ -130,6 +134,8 @@ void roundRobbin(Process *processes)
             break;
         }
     }
+    timeWaitAvg = ((float)totalWaitTime / (float)numberProcess);
+    printf("\n\nTempo de espera: médio %f ms\n", timeWaitAvg);
 }
 
 void calculate(Process *processes)
