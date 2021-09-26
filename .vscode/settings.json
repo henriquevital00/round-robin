@@ -2,6 +2,7 @@
     "files.associations": {
         "*.html": "njk",
         "algorithm.h": "c",
-        "output.h": "c"
+        "output.h": "c",
+        "input.h": "c"
     }
 }

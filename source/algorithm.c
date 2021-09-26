@@ -42,6 +42,7 @@ bool setProcessOnTime(Process *processes, int time)
             return true;
         }
     }
+    return false;
 }
 
 bool hasInterruption(Process current, int quantum, bool flagTime)
@@ -62,23 +63,28 @@ bool hasInterruption(Process current, int quantum, bool flagTime)
             current.interruptions[i] = 0;
             if (flagTime)
             {
-                printf("P%d (%d) - \n\n", processArray[size() - 1].number, processArray[size() - 1].duration);
-
-                //Process lastData = processArray[size() - 1];
-                //processArray[size() - 1] = current;
-                //removeData();
-                //insert(lastData);
+                Process lastData = processArray[size() - 1];
+                processArray[size() - 1] = current;
+                removeData();
+                insert(lastData);
             }
-            removeData();
-            insert(current);
+            else
+            {
+                removeData();
+                insert(current);
+            }
             return true;
         }
     }
     return false;
 }
 
-void incrementProcess(Process *process)
+void incrementProcess(Process *process, int time)
 {
+    // processo acabou de começar
+    if(process->duration == process->startDuration){
+        process->startTime = time;
+    }
     process->duration--;
     process->quantumCount++;
 }
@@ -88,7 +94,8 @@ void roundRobbin(Process *processes)
     int totalDuration = calculateTotalDuration(processes);
     int quantum = 4;
 
-    for (int t = 0; t < totalDuration; t++)
+
+    for (int t = 0; t < totalDuration + 1; t++)
     {
         printf("\n\nTempo: %d - ", t);
         bool arriveProcess = setProcessOnTime(processes, t);
@@ -110,11 +117,13 @@ void roundRobbin(Process *processes)
                 if (current->duration == 0)
                 {
                     printf("fim de processo: P%d\n", current->number);
+                    current->finalTime = t;
+                    printf("Tempo de espera: %d ms\n", current->finalTime - current->startTime);
                     removeData();
                 }
             }
             printf("Na CPU: P%d \n", current->number);
-            incrementProcess(current);
+            incrementProcess(current, t);
         }
         else if (t > totalDuration)
         {
