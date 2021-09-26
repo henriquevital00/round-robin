@@ -53,6 +53,7 @@ void showQueue()
     printf("Fila: ");
     for (int i = 0; i < size(); i++)
     {
+      if (processArray[i].duration)
         printf("P%d (%d) - ", processArray[i].number, processArray[i].duration);
     }
     printf("\n");

@@ -5,11 +5,11 @@ typedef struct
 {
     int number;
     int duration;
-    int startDuration;
-    int quantumCount;
     int arrival;
     int *interruptions;
     int numberIO;
+    int quantumCount;
+    int startDuration;
     int startTime;
     int finalTime;
 } Process;

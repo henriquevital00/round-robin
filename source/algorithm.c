@@ -2,145 +2,150 @@
 #include "../include/process.h"
 #include "../include/queue.h"
 
-/*
-Alterna entre processos (preempção)
-Existência de uma fatia de tempo para execução (quantum)
-Percorre a fila circularmente, alocando a CPU a cada processo por 1 quantum de tempo
-O processo pode parar sua execução antes de terminar seu 1 quantum de tempo
-*/
+/* INSERTION */
 
-int calculateTotalDuration(Process *processes)
-{
+bool isInserting(Process* processes, int time){
+    for (int n = 0; n < numberProcess; n++){
+        Process process = processes[n];
+        if (process.arrival == time)
+            return true;
+    }
+}
+
+bool onInsertAtTime(Process *processes, int time){
+    bool hasRunningProcess = first() != NULL;
+
+    for (int n = 0; n < numberProcess; n++){
+        Process process = processes[n];
+        if (process.arrival == time){
+            insert(process);
+            printf("Chegada do processo: P%d\n", process.number);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+/* INTERRUPTION */
+
+bool isInterrupting(int quantum){
+
+    Process* current = first();
+
+    if(current){
+    
+      if (current->quantumCount == quantum)
+          return true;
+
+      for (int i = 0; i < current->numberIO; i++){
+
+          int remainingTime = current->startDuration - current->duration;
+
+          if (current->interruptions[i] == remainingTime)
+            return true;
+              
+      }
+    }
+
+    return false;
+
+}
+
+void onInterruptProcess(int quantum){
+
+    Process current = *first();
+
+    bool isQuantumInterruption = current.quantumCount == quantum;
+
+    if (isQuantumInterruption)
+      printf("fim de quantum: P%d\n", current.number);
+    else
+      printf("operação de I/O: P%d\n", current.number);
+
+    /* Move to the end of queue*/
+    removeData();
+    insert(current);
+
+    (first())->quantumCount = 0;
+}
+
+/* Utils */
+void incrementProcess(int time){
+    Process* current = first();
+
+    if (current->duration == current->startDuration)
+        current->startTime = time;
+
+    current->duration--;
+    current->quantumCount++;
+}
+
+int calculateTotalDuration(Process *processes){
     int duration = 0;
     for (int i = 0; i < numberProcess; i++)
-    {
         duration += processes[i].duration;
-    }
     return duration;
 }
 
-bool setProcessOnTime(Process *processes, int time)
-{
-    bool hasRunningProcess = first() != NULL;
+void calculateProcessWaitTime(int* totalWaitTime){
+  Process* current = first();
 
-    for (int n = 0; n < numberProcess; n++)
-    {
-        Process process = processes[n];
-        if (process.arrival == time)
-        {
-            if (hasRunningProcess)
-            {
-                Process current = *(first());
-                insert(process);
-            }
-            else
-            {
-                insert(process);
-            }
-            printf("Chegada do processo: P%d\n", process.number);
-
-            return true;
-        }
-    }
-    return false;
+  int waitTime = (current->finalTime - current->startTime);
+  (*totalWaitTime) += waitTime;
+  printf("Tempo de espera: %d ms\n", waitTime);
 }
 
-bool hasInterruption(Process current, int quantum, bool flagTime)
-{
-    for (int i = 0; i < current.numberIO; i++)
-    {
-        if (current.interruptions[i] == (current.startDuration - current.duration))
-        {
-            printf("operação de I/O: P%d\n", current.number);
-            current.interruptions[i] = 0;
-            if (flagTime)
-            {
-                Process lastData = processArray[size() - 1];
-                processArray[size() - 1] = current;
-                removeData();
-                insert(lastData);
-            }
-            else
-            {
-                removeData();
-                insert(current);
-            }
-            return true;
-        }
-    }
-    if (current.quantumCount == quantum)
-    {
-        printf("fim de quantum: P%d\n", current.number);
-        removeData();
-        insert(current);
-        return true;
-    }
-    return false;
+float calculateWaitTimeAverage(int* totalWaitTime){
+  return *totalWaitTime / numberProcess;
 }
 
-void incrementProcess(Process *process, int time)
-{
-    // processo acabou de começar
-    if (process->duration == process->startDuration)
-    {
-        process->startTime = time;
-    }
-    process->duration--;
-    process->quantumCount++;
+bool onExitProcess(int time, int* totalWaitTime){
+  Process* current = first();
+
+  if (current->duration == 0){
+      printf("fim de processo: P%d\n", current->number);
+      current->finalTime = time;
+      calculateProcessWaitTime(totalWaitTime);
+      removeData();
+  }
 }
 
-void roundRobbin(Process *processes)
-{
+
+
+void roundRobbin(Process *processes){
+
     int totalDuration = calculateTotalDuration(processes);
     int quantum = 4;
-
-    float timeWaitAvg = 0.0f;
     int totalWaitTime = 0;
 
-    for (int t = 0; t < totalDuration + 1; t++)
-    {
-        printf("\n\nTempo: %d - ", t);
-        bool arriveProcess = setProcessOnTime(processes, t);
+    for (int t = 0; t < totalDuration; t++){
+      printf("\n\nTempo: %d - ", t);
+      bool hasInsertion = isInserting(processes, t);
+      bool hasInterrupt = isInterrupting(quantum);
 
-        if (!isEmpty())
-        {
-            Process *current = first();
+      if(hasInsertion && hasInterrupt){
+        onInterruptProcess(quantum);
+        onInsertAtTime(processes, t);
+      }
+      else if (hasInsertion)
+        onInsertAtTime(processes, t);
+      else if (hasInterrupt)
+        onInterruptProcess(quantum);
+      
 
-            if (hasInterruption(*current, quantum, arriveProcess))
-            {
-                current->quantumCount = 0;
-                showQueue();
-            }
-            else
-            {
-
-                showQueue();
-
-                if (current->duration == 0)
-                {
-                    printf("fim de processo: P%d\n", current->number);
-                    current->finalTime = t;
-                    int waitTime = (current->finalTime - current->startTime);
-                    totalWaitTime += waitTime;
-                    printf("Tempo de espera: %d ms\n", waitTime);
-                    removeData();
-                }
-            }
-            printf("Na CPU: P%d \n", current->number);
-            incrementProcess(current, t);
-        }
-        else if (t > totalDuration)
-        {
-            break;
-        }
+      showQueue();
+      
+      onExitProcess(t, &totalWaitTime);
+      printf("Na CPU: P%d \n",  first()->number);
+      incrementProcess(t);
     }
-    timeWaitAvg = ((float)totalWaitTime / (float)numberProcess);
-    printf("\n\nTempo de espera: médio %f ms\n", timeWaitAvg);
+
+    printf("Tempo médio de espera = %.2f", calculateWaitTimeAverage(&totalWaitTime));
 }
 
-void calculate(Process *processes)
-{
+void calculate(Process *processes){
     createQueue();
-
     roundRobbin(processes);
 }
