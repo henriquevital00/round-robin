@@ -13,8 +13,7 @@ bool isInserting(Process* processes, int time){
 }
 
 bool onInsertAtTime(Process *processes, int time){
-    bool hasRunningProcess = first() != NULL;
-
+    
     for (int n = 0; n < numberProcess; n++){
         Process process = processes[n];
         if (process.arrival == time){
