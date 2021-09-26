@@ -8,15 +8,15 @@
 #include "process.h"
 
 Process *processArray;
-int front;
 int rear;
 int itemCount;
 
 void createQueue();
-Process peek();
+Process* first();
 bool isEmpty();
 int size();
 void insert(Process data);
 Process removeData();
+void showQueue();
 
 #endif

@@ -21,6 +21,45 @@ int calculateTotalDuration(Process *processes)
     return duration;
 }
 
+void setProcessOnTime(Process *processes, int time)
+{
+    bool hasRunningProcess = first() != NULL;
+
+    if (hasRunningProcess)
+    {
+        Process current = *(first());
+        for (int n = 0; n < numberProcess; n++)
+        {
+            Process process = processes[n];
+            if (process.arrival == time)
+            {
+                removeData();
+                insert(process);
+                insert(current);
+                return;
+            }
+        }
+    }
+    else
+    {
+        insert(processes[0]);
+    }
+}
+
+bool hasInterruption(Process current, int time)
+{
+    for (int i = 0; i < current.numberIO; i++)
+    {
+        if (current.interruptions[i] == time)
+        {
+            removeData();
+            insert(current);
+            return true;
+        }
+    }
+    return false;
+}
+
 void roundRobbin(Process *processes)
 {
     int totalDuration = calculateTotalDuration(processes);
@@ -28,37 +67,20 @@ void roundRobbin(Process *processes)
 
     for (int t = 0; t < totalDuration; t++)
     {
-        printf("Time: %d\n", t);
-        for (int n = 0; n < numberProcess; n++)
+        showQueue();
+        printf("\n\nTime: %d\n", t);
+        setProcessOnTime(processes, t);
+        if (!isEmpty())
         {
-            Process process = processes[n];
-            if (process.arrival == t)
-            {
-                insert(process);
-            }
-        }
-        if (size())
-        {
-            Process current = processArray[front];
-            printf("Currennt process: %d\n", current.number);
-            bool hasInterruption = false;
-            for (int i = 0; i < current.numberIO; i++)
-            {
-                if (current.interruptions[i] == t)
-                {
-                    hasInterruption = true;
-                    removeData();
-                    insert(current);
-                }
-            }
-            if (hasInterruption)
+            Process* current = first();
+            printf("Currennt process: %d\n", current->number);
+            if (hasInterruption(*current, t))
                 break;
 
-            current.duration--;
-
-            if (!current.duration)
+            if (!current->duration--)
                 removeData();
         }
+        showQueue();
     }
 }
 

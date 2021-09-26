@@ -7,9 +7,10 @@
 
 int main()
 {
-    Process* processes = input(); 
+    int var = 5;
+    Process* processes = input();
     calculate(processes);
     clearProcess(processes);
-    
+
     return 0;
 }

@@ -1,7 +1,6 @@
 #include "../include/queue.h"
 
 Process *processArray;
-int front = 0;
 int rear = -1;
 int itemCount = 0;
 
@@ -10,9 +9,11 @@ void createQueue()
     processArray = malloc(sizeof(Process) * numberProcess);
 }
 
-Process peek()
+Process* first()
 {
-    return processArray[front];
+    if (!isEmpty())
+        return processArray;
+    return NULL;
 }
 
 bool isEmpty()
@@ -27,14 +28,30 @@ int size()
 
 void insert(Process data)
 {
-    processArray[++rear] = data;
+    processArray[size()] = data;
     itemCount++;
 }
 
 Process removeData()
 {
-    Process data = processArray[front++];
+    if (!isEmpty())
+    {
+        Process data = *(first());
+        for (int i = size() - 1; i > 0; i--)
+            processArray[i - 1] = processArray[i];
 
-    itemCount--;
-    return data;
+        itemCount--;
+        return data;
+    }
+    return;
+}
+
+void showQueue()
+{
+    printf("Queue: ");
+    for (int i = 0; i < size(); i++)
+    {
+        printf("%d ", processArray[i].number);
+    }
+    printf("\n");
 }
