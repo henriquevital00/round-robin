@@ -23,7 +23,7 @@ void onInsertAtTime(Process *processes, int time)
         Process process = processes[n];
         if (process.arrival == time)
         {
-            insert(process);
+            push(process);
             printf("Chegada do processo: P%d\n", process.number);
         }
     }
@@ -88,8 +88,8 @@ void dequeueProcess()
     /* Move to the end of queue*/
     Process current = *first();
 
-    removeData();
-    insert(current);
+    pop();
+    push(current);
 
     (first())->quantumCount = 0;
 }
@@ -136,7 +136,7 @@ bool onExitProcess(int time, int *totalWaitTime)
         printf("fim de processo: P%d\n", current->number);
         current->finalTime = time;
         calculateProcessWaitTime(totalWaitTime);
-        removeData();
+        pop();
         return true;
     }
     return false;
@@ -145,7 +145,7 @@ bool onExitProcess(int time, int *totalWaitTime)
 void roundRobbin(Process *processes)
 {
 
-    int totalDuration = calculateTotalDuration(processes);
+    int totalDuration = calculateTotalDuration(processes) + 1;
     int quantum = 4;
     int totalWaitTime = 0;
 
@@ -177,8 +177,10 @@ void roundRobbin(Process *processes)
 
         showQueue();
         bool isExitProcess = onExitProcess(t, &totalWaitTime);
-        printf("Na CPU: P%d \n", first()->number);
-        incrementProcess(t);
+        if (first()){
+            printf("Na CPU: P%d \n", first()->number);
+            incrementProcess(t);
+        }
     }
 
     printf("Tempo médio de espera = %.2f", calculateWaitTimeAverage(&totalWaitTime));

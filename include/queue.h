@@ -15,8 +15,8 @@ void createQueue();
 Process* first();
 bool isEmpty();
 int size();
-void insert(Process data);
-Process removeData();
+void push(Process data);
+Process pop();
 void showQueue();
 
 #endif

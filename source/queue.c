@@ -26,13 +26,13 @@ int size()
     return itemCount;
 }
 
-void insert(Process data)
+void push(Process data)
 {
     processArray[size()] = data;
     itemCount++;
 }
 
-Process removeData()
+Process pop()
 {
     if (!isEmpty())
     {
@@ -40,7 +40,7 @@ Process removeData()
 
         for (int i = 0; i < size() - 1; i++)
         {
-            processArray[i] = processArray[i+1];
+            processArray[i] = processArray[i + 1];
         }
 
         itemCount--;
@@ -53,8 +53,8 @@ void showQueue()
     printf("Fila: ");
     for (int i = 0; i < size(); i++)
     {
-      if (processArray[i].duration)
-        printf("P%d (%d) - ", processArray[i].number, processArray[i].duration);
+        if (processArray[i].duration)
+            printf("P%d (%d) - ", processArray[i].number, processArray[i].duration);
     }
     printf("\n");
 }
