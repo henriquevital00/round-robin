@@ -7,7 +7,6 @@
 
 int main()
 {
-    int var = 5;
     //Process* processes = input();
 
     Process p1;
