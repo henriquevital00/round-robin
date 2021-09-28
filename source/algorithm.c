@@ -3,67 +3,85 @@
 #include "../include/queue.h"
 
 /* UTILS */
-Process* (*currentProcess)() = first;
+Process *(*currentProcess)() = first;
 
-void requeueProcess(){
+void requeueProcess()
+{
     Process current = pop();
     current.quantumCount = 0;
     push(current);
 }
 
-void incrementTime(int time){
-    if (currentProcess()->duration == currentProcess()->startDuration)
-        currentProcess()->startTime = time;
+void incrementTime(int time)
+{
     currentProcess()->quantumCount++;
     currentProcess()->duration--;
 }
 
-int calculateTotalDuration(Process *processes){
+int calculateTotalDuration(Process *processes)
+{
     int duration = 0;
     for (int i = 0; i < numberProcess; i++)
         duration += processes[i].duration;
     return duration + 1;
 }
 
-void calculateProcessWaitTime(int *totalWaitTime){
-    int waitTime = (currentProcess()->finalTime - currentProcess()->startTime);
-    (*totalWaitTime) += waitTime;
-    printf("Tempo de espera: %d ms\n", waitTime);
+void calculateProcessWaitTime(int* waitTimeArray)
+{
+    waitTimeArray[currentProcess()->number-1] = (currentProcess()->finalTime - (currentProcess()->arrival + currentProcess()->startDuration));
 }
 
-float calculateWaitTimeAverage(int *totalWaitTime){
-    return (*totalWaitTime) / numberProcess;
+void showWaitTimeAverage(int* waitTimeArray)
+{
+    float totalTime = 0;
+    printf("\nTempos de espera:\n\n");
+
+    for (int n = 0; n < numberProcess; n++)
+    {
+        printf("P%d: %d ms\n", n+1, waitTimeArray[n]);
+        totalTime += waitTimeArray[n];
+    }
+    float waitTimeAverage = (float)(totalTime) / (float)numberProcess;
+    printf("\nTempo médio de espera = %.2f\n", waitTimeAverage);
+    free(waitTimeArray);
 }
 
-void onExitProcess(int time, int *totalWaitTime){
-    if (currentProcess()->duration == 0){
+void onExitProcess(int time, int* waitTimeArray)
+{
+    if (currentProcess()->duration == 0)
+    {
         printf("fim de processo: P%d\n", currentProcess()->number);
         currentProcess()->finalTime = time;
-        calculateProcessWaitTime(totalWaitTime);
+        calculateProcessWaitTime(waitTimeArray);
 
         pop();
     }
 }
 
 /* INSERTION */
-bool isProcessArrive(Process *processes, int time){
-    for (int n = 0; n < numberProcess; n++){
+bool isProcessArrive(Process *processes, int time)
+{
+    for (int n = 0; n < numberProcess; n++)
+    {
         if (processes[n].arrival == time)
             return true;
     }
     return false;
 }
 
-int sortProcesses(const void *curr, const void *next){
-    int currDuration = ((Process*)curr)->duration;
-    int nextDuration = ((Process*)next)->duration;
+int sortProcesses(const void *curr, const void *next)
+{
+    int currDuration = ((Process *)curr)->duration;
+    int nextDuration = ((Process *)next)->duration;
     return nextDuration - currDuration;
 }
 
-Process* getConcurrentProcessesSorted(Process* processes, int time, int* concurrentsNumber){
-    Process* sortedProcesses = malloc(sizeof(Process)*numberProcess);
+Process *getConcurrentProcessesSorted(Process *processes, int time, int *concurrentsNumber)
+{
+    Process *sortedProcesses = malloc(sizeof(Process) * numberProcess);
 
-    for (int n = 0; n < numberProcess; n++){
+    for (int n = 0; n < numberProcess; n++)
+    {
         Process process = processes[n];
         if (process.arrival == time)
             sortedProcesses[(*concurrentsNumber)++] = process;
@@ -73,11 +91,13 @@ Process* getConcurrentProcessesSorted(Process* processes, int time, int* concurr
     return sortedProcesses;
 }
 
-void onProcessArrive(Process *processes, int time){
+void onProcessArrive(Process *processes, int time)
+{
     int concurrentsNumber = 0;
-    Process* sortedProcesses = getConcurrentProcessesSorted(processes, time, &concurrentsNumber);
+    Process *sortedProcesses = getConcurrentProcessesSorted(processes, time, &concurrentsNumber);
 
-    for(int n = 0; n < concurrentsNumber; n++){
+    for (int n = 0; n < concurrentsNumber; n++)
+    {
         push(sortedProcesses[n]);
         printf("Chegada do processo: P%d\n", sortedProcesses[n].number);
     }
@@ -86,19 +106,24 @@ void onProcessArrive(Process *processes, int time){
 }
 
 /* QUANTUM */
-bool isQuantumOverflow(int quantum){
+bool isQuantumOverflow(int quantum)
+{
     return currentProcess() ? currentProcess()->quantumCount == quantum : false;
 }
 
-void onOverflowQuantum(){
+void onOverflowQuantum()
+{
     printf("fim de quantum: P%d\n", currentProcess()->number);
     requeueProcess();
 }
 
 /* INTERRUPTION */
-bool isInterruption(){
-    if (currentProcess()){
-        for (int i = 0; i < currentProcess()->numberIO; i++){
+bool isInterruption()
+{
+    if (currentProcess())
+    {
+        for (int i = 0; i < currentProcess()->numberIO; i++)
+        {
             int remainingTime = currentProcess()->startDuration - currentProcess()->duration;
 
             if (currentProcess()->interruptions[i] == remainingTime)
@@ -108,25 +133,29 @@ bool isInterruption(){
     return false;
 }
 
-void onInterruptProcess(){
+void onInterruptProcess()
+{
     printf("operação de I/O: P%d\n", currentProcess()->number);
     requeueProcess();
 }
 
 /* ALGORITHM */
-void roundRobbin(Process *processes){
+void roundRobbin(Process *processes)
+{
     int totalDuration = calculateTotalDuration(processes);
     int quantum = 4;
-    int totalWaitTime = 0;
+    int* waitTimeArray = malloc(sizeof(int)*numberProcess);
 
-    for (int t = 0; t < totalDuration; t++){
+    for (int t = 0; t < totalDuration; t++)
+    {
         printf("\n\nTempo: %d - ", t);
 
         bool hasProcessArriving = isProcessArrive(processes, t);
         bool hasInterruption = isInterruption();
         bool hasQuantumOverflow = isQuantumOverflow(quantum);
 
-        if (hasProcessArriving && hasInterruption){
+        if (hasProcessArriving && hasInterruption)
+        {
             onInterruptProcess();
             onProcessArrive(processes, t);
         }
@@ -138,18 +167,19 @@ void roundRobbin(Process *processes){
             onOverflowQuantum();
 
         showQueue();
-        onExitProcess(t, &totalWaitTime);
+        onExitProcess(t, waitTimeArray);
 
-        if (currentProcess()){
+        if (currentProcess())
+        {
             printf("Na CPU: P%d \n", currentProcess()->number);
             incrementTime(t);
         }
     }
-
-    printf("Tempo médio de espera = %.2f", calculateWaitTimeAverage(&totalWaitTime));
+    showWaitTimeAverage(waitTimeArray);
 }
 
-void calculate(Process *processes){
+void calculate(Process *processes)
+{
     createQueue();
     roundRobbin(processes);
 }

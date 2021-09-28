@@ -9,7 +9,6 @@ typedef struct{
     int numberIO;
     int quantumCount;
     int startDuration;
-    int startTime;
     int finalTime;
 } Process;
 
