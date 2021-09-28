@@ -8,7 +8,6 @@
 #include "process.h"
 
 Process *processArray;
-int rear;
 int itemCount;
 
 void createQueue();
