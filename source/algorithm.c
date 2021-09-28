@@ -87,11 +87,9 @@ void dequeueProcess()
 {
     /* Move to the end of queue*/
     Process current = *first();
-
+    current.quantumCount = 0;
     pop();
     push(current);
-
-    (first())->quantumCount = 0;
 }
 
 void incrementProcess(int time)
@@ -102,7 +100,7 @@ void incrementProcess(int time)
         current->startTime = time;
 
     current->duration--;
-    current->quantumCount++;
+    //current->quantumCount++;
 }
 
 int calculateTotalDuration(Process *processes)
@@ -151,7 +149,9 @@ void roundRobbin(Process *processes)
 
     for (int t = 0; t < totalDuration; t++)
     {
+
         printf("\n\nTempo: %d - ", t);
+        if(first()) first()->quantumCount++;
         Process current = first() ? *first() : processes[0];
         bool hasInsertion = isInserting(processes, t);
         bool hasInterrupt = isInterrupting();
@@ -176,7 +176,7 @@ void roundRobbin(Process *processes)
         }
 
         showQueue();
-        bool isExitProcess = onExitProcess(t, &totalWaitTime);
+        onExitProcess(t, &totalWaitTime);
         if (first()){
             printf("Na CPU: P%d \n", first()->number);
             incrementProcess(t);
