@@ -49,6 +49,13 @@ void onOverflowQuantum()
     dequeueProcess();
 }
 
+void incrementQuantum()
+{
+    Process *current = first();
+    if (current)
+        current->quantumCount++;
+}
+
 /* INTERRUPTION */
 
 bool isInterrupting()
@@ -151,8 +158,7 @@ void roundRobbin(Process *processes)
     {
 
         printf("\n\nTempo: %d - ", t);
-        if(first()) first()->quantumCount++;
-        Process current = first() ? *first() : processes[0];
+        incrementQuantum();
         bool hasInsertion = isInserting(processes, t);
         bool hasInterrupt = isInterrupting();
         bool hasQuantum = isQuantumOverflow(quantum);
@@ -163,22 +169,21 @@ void roundRobbin(Process *processes)
             onInsertAtTime(processes, t);
         }
         else if (hasQuantum && hasInterrupt)
-        {
             onInterruptProcess(quantum);
-        }
         else if (hasInsertion)
             onInsertAtTime(processes, t);
         else if (hasInterrupt)
             onInterruptProcess(quantum);
         else if (hasQuantum)
-        {
             onOverflowQuantum();
-        }
 
         showQueue();
         onExitProcess(t, &totalWaitTime);
-        if (first()){
-            printf("Na CPU: P%d \n", first()->number);
+
+        Process *current = first();
+        if (current)
+        {
+            printf("Na CPU: P%d \n", current->number);
             incrementProcess(t);
         }
     }
