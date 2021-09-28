@@ -168,12 +168,10 @@ void roundRobbin(Process *processes)
             onInterruptProcess(quantum);
             onInsertAtTime(processes, t);
         }
-        else if (hasQuantum && hasInterrupt)
+        else if (hasInterrupt || (hasQuantum && hasInterrupt))
             onInterruptProcess(quantum);
         else if (hasInsertion)
             onInsertAtTime(processes, t);
-        else if (hasInterrupt)
-            onInterruptProcess(quantum);
         else if (hasQuantum)
             onOverflowQuantum();
 
