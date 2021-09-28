@@ -17,6 +17,7 @@ void dequeueProcess(){
 void incrementTime(int time){
     if (currentProcess()->duration == currentProcess()->startDuration)
         currentProcess()->startTime = time;
+    currentProcess()->quantumCount++;
     currentProcess()->duration--;
 }
 
@@ -34,7 +35,7 @@ void calculateProcessWaitTime(int *totalWaitTime){
 }
 
 float calculateWaitTimeAverage(int *totalWaitTime){
-    return *totalWaitTime / numberProcess;
+    return (*totalWaitTime) / numberProcess;
 }
 
 void onExitProcess(int time, int *totalWaitTime){
@@ -50,21 +51,41 @@ void onExitProcess(int time, int *totalWaitTime){
 /* INSERTION */
 bool isInserting(Process *processes, int time){
     for (int n = 0; n < numberProcess; n++){
-        Process process = processes[n];
-        if (process.arrival == time)
+        if (processes[n].arrival == time)
             return true;
     }
     return false;
 }
 
-void onInsertAtTime(Process *processes, int time){
+int sortProcesses(const void *curr, const void *next){
+    int currDuration = ((Process*)curr)->duration;
+    int nextDuration = ((Process*)next)->duration;
+    return nextDuration - currDuration;
+}
+
+Process* getConcurrentProcessesSorted(Process* processes, int time, int* concurrentsNumber){
+    Process* sortedProcesses = malloc(sizeof(Process)*numberProcess);
+
     for (int n = 0; n < numberProcess; n++){
         Process process = processes[n];
-        if (process.arrival == time){
-            push(process);
-            printf("Chegada do processo: P%d\n", process.number);
-        }
+        if (process.arrival == time)
+            sortedProcesses[(*concurrentsNumber)++] = process;
     }
+
+    qsort(sortedProcesses, *concurrentsNumber, sizeof(Process), sortProcesses);
+    return sortedProcesses;
+}
+
+void onInsertAtTime(Process *processes, int time){
+    int concurrentsNumber = 0;
+    Process* sortedProcesses = getConcurrentProcessesSorted(processes, time, &concurrentsNumber);
+
+    for(int n = 0; n < concurrentsNumber; n++){
+        push(sortedProcesses[n]);
+        printf("Chegada do processo: P%d\n", sortedProcesses[n].number);
+    }
+
+    free(sortedProcesses);
 }
 
 /* QUANTUM */
@@ -79,11 +100,6 @@ bool isQuantumOverflow(int quantum){
 void onOverflowQuantum(){
     printf("fim de quantum: P%d\n", currentProcess()->number);
     dequeueProcess();
-}
-
-void incrementQuantum(){
-    if (currentProcess())
-        currentProcess()->quantumCount++;
 }
 
 /* INTERRUPTION */
@@ -133,7 +149,6 @@ void roundRobbin(Process *processes){
 
         if (currentProcess()){
             printf("Na CPU: P%d \n", currentProcess()->number);
-            incrementQuantum();
             incrementTime(t);
         }
     }
