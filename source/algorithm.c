@@ -6,11 +6,8 @@
 Process* (*currentProcess)() = first;
 
 void dequeueProcess(){
-    Process current = *currentProcess();
+    Process current = pop();
     current.quantumCount = 0;
-
-    /* Move to the end of the queue*/
-    pop();
     push(current);
 }
 
