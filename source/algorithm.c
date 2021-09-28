@@ -132,7 +132,7 @@ float calculateWaitTimeAverage(int *totalWaitTime)
     return *totalWaitTime / numberProcess;
 }
 
-bool onExitProcess(int time, int *totalWaitTime)
+void onExitProcess(int time, int *totalWaitTime)
 {
     Process *current = first();
 
@@ -142,9 +142,7 @@ bool onExitProcess(int time, int *totalWaitTime)
         current->finalTime = time;
         calculateProcessWaitTime(totalWaitTime);
         pop();
-        return true;
     }
-    return false;
 }
 
 void roundRobbin(Process *processes)
