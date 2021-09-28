@@ -26,19 +26,19 @@ int calculateTotalDuration(Process *processes)
     return duration + 1;
 }
 
-void calculateProcessWaitTime(int* waitTimeArray)
+void calculateProcessWaitTime(int *waitTimeArray)
 {
-    waitTimeArray[currentProcess()->number-1] = (currentProcess()->finalTime - (currentProcess()->arrival + currentProcess()->startDuration));
+    waitTimeArray[currentProcess()->number - 1] = (currentProcess()->finalTime - (currentProcess()->arrival + currentProcess()->startDuration));
 }
 
-void showWaitTimeAverage(int* waitTimeArray)
+void showWaitTimeAverage(int *waitTimeArray)
 {
     float totalTime = 0;
     printf("\nTempos de espera:\n\n");
 
     for (int n = 0; n < numberProcess; n++)
     {
-        printf("P%d: %d ms\n", n+1, waitTimeArray[n]);
+        printf("P%d: %d ms\n", n + 1, waitTimeArray[n]);
         totalTime += waitTimeArray[n];
     }
     float waitTimeAverage = (float)(totalTime) / (float)numberProcess;
@@ -46,15 +46,19 @@ void showWaitTimeAverage(int* waitTimeArray)
     free(waitTimeArray);
 }
 
-void onExitProcess(int time, int* waitTimeArray)
+void onExitProcess(int time, int *waitTimeArray)
 {
-    if (currentProcess()->duration == 0)
+    if (currentProcess())
     {
-        printf("fim de processo: P%d\n", currentProcess()->number);
-        currentProcess()->finalTime = time;
-        calculateProcessWaitTime(waitTimeArray);
+        Process var = *currentProcess();
+        if (currentProcess()->duration == 0)
+        {
+            printf("fim de processo: P%d\n", currentProcess()->number);
+            currentProcess()->finalTime = time;
+            calculateProcessWaitTime(waitTimeArray);
 
-        pop();
+            pop();
+        }
     }
 }
 
@@ -73,7 +77,7 @@ int sortProcesses(const void *curr, const void *next)
 {
     int currDuration = ((Process *)curr)->duration;
     int nextDuration = ((Process *)next)->duration;
-    return nextDuration - currDuration;
+    return currDuration - nextDuration;
 }
 
 Process *getConcurrentProcessesSorted(Process *processes, int time, int *concurrentsNumber)
@@ -140,11 +144,11 @@ void onInterruptProcess()
 }
 
 /* ALGORITHM */
-void roundRobbin(Process *processes)
+void roundRobbin(Process *processes, int quantum)
 {
+    printf("Quantum: %d\n", quantum);
     int totalDuration = calculateTotalDuration(processes);
-    int quantum = 4;
-    int* waitTimeArray = malloc(sizeof(int)*numberProcess);
+    int *waitTimeArray = malloc(sizeof(int) * numberProcess);
 
     for (int t = 0; t < totalDuration; t++)
     {
@@ -178,8 +182,8 @@ void roundRobbin(Process *processes)
     showWaitTimeAverage(waitTimeArray);
 }
 
-void calculate(Process *processes)
+void calculate(Process *processes, int quantum)
 {
     createQueue();
-    roundRobbin(processes);
+    roundRobbin(processes, quantum);
 }

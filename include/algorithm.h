@@ -5,6 +5,6 @@
 #include <stdlib.h>
 #include "../include/process.h"
 
-void calculate(Process* arrayProcess);
+void calculate(Process* arrayProcess, int quantum);
 
 #endif

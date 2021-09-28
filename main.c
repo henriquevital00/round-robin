@@ -7,9 +7,12 @@
 #include "include/queue.h"
 
 int main(){
-    //Process* processes = input();
+    int quantum;
+    printf("Digite o valor do quantum: ");
+    scanf("%d", &quantum);
+    Process* processes = input();
 
-    Process p1;
+    /*Process p1;
     p1.number = 1;
     p1.duration = 9;
     p1.arrival = 10;
@@ -59,12 +62,12 @@ int main(){
 
     Process processesArrayu[5] = {p1, p2, p3, p4, p5};
     Process *processes = processesArrayu;
-    numberProcess = 5;
+    numberProcess = 5;*/
 
-    calculate(processes);
-    
+    calculate(processes, quantum);
+
     clearQueue();
-    //clearProcess(processes);
+    clearProcess(processes);
 
     return 0;
 }
