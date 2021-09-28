@@ -48,7 +48,6 @@ void onExitProcess(int time, int *totalWaitTime){
 }
 
 /* INSERTION */
-
 bool isInserting(Process *processes, int time){
     for (int n = 0; n < numberProcess; n++){
         Process process = processes[n];
@@ -91,7 +90,6 @@ void incrementQuantum(){
 bool isInterrupting(){
     if (currentProcess()){
         for (int i = 0; i < currentProcess()->numberIO; i++){
-
             int remainingTime = currentProcess()->startDuration - currentProcess()->duration;
 
             if (currentProcess()->interruptions[i] == remainingTime)
@@ -120,7 +118,7 @@ void roundRobbin(Process *processes){
         bool hasQuantumOverflow = isQuantumOverflow(quantum);
 
         if (hasInsertion && hasInterruption){
-            onInterruptProcess(quantum);
+            onInterruptProcess();
             onInsertAtTime(processes, t);
         }
         else if (hasInterruption || (hasQuantumOverflow && hasInterruption))

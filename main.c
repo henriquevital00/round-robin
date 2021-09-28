@@ -61,12 +61,10 @@ int main(){
     Process *processes = processesArrayu;
     numberProcess = 5;
 
-
     calculate(processes);
+    
     clearQueue();
     //clearProcess(processes);
-
-
 
     return 0;
 }

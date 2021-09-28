@@ -1,8 +1,7 @@
 #ifndef PROCESS_H_
 #define PROCESS_H_
 
-typedef struct
-{
+typedef struct{
     int number;
     int duration;
     int arrival;
