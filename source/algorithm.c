@@ -96,7 +96,7 @@ void onOverflowQuantum(){
 }
 
 /* INTERRUPTION */
-bool isInterrupting(){
+bool isInterruption(){
     if (currentProcess()){
         for (int i = 0; i < currentProcess()->numberIO; i++){
             int remainingTime = currentProcess()->startDuration - currentProcess()->duration;
@@ -123,7 +123,7 @@ void roundRobbin(Process *processes){
         printf("\n\nTempo: %d - ", t);
 
         bool hasProcessArriving = isProcessArrive(processes, t);
-        bool hasInterruption = isInterrupting();
+        bool hasInterruption = isInterruption();
         bool hasQuantumOverflow = isQuantumOverflow(quantum);
 
         if (hasProcessArriving && hasInterruption){
