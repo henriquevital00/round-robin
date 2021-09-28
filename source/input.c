@@ -1,15 +1,13 @@
 #include "../include/input.h"
 #include "../include/process.h"
 
-Process* input()
-{
+Process* input(){
     printf("Quantos processos você deseja inserir? \n");
     scanf("%d", &numberProcess);
 
     Process* processes = malloc(sizeof(Process) * numberProcess);
 
-    for (int i = 0; i < numberProcess; i++)
-    {
+    for (int i = 0; i < numberProcess; i++){
         Process process;
         process.number = i + 1;
         process.quantumCount = 0;
@@ -27,8 +25,7 @@ Process* input()
 
         int* arrayIO = malloc(sizeof(int) * process.numberIO);
 
-        for (int j = 0; j < process.numberIO; j++)
-        {
+        for (int j = 0; j < process.numberIO; j++){
             printf("Quando ocorre a I/O? \n");
             scanf("%d", &arrayIO[j]);
         }
@@ -42,9 +39,8 @@ Process* input()
 }
 
 void clearProcess(Process* processes){
-    for (int i = 0; i < numberProcess; i++)
-    {
-        free(processes[i].interruptions);
+    for (int i = 0; i < numberProcess; i++){
+      free(processes[i].interruptions);
     }
     free(processes);
 }

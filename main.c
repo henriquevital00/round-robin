@@ -4,9 +4,9 @@
 #include "include/algorithm.h"
 #include "include/input.h"
 #include "include/process.h"
+#include "include/queue.h"
 
-int main()
-{
+int main(){
     //Process* processes = input();
 
     Process p1;
@@ -60,8 +60,13 @@ int main()
     Process processesArrayu[5] = {p1, p2, p3, p4, p5};
     Process *processes = processesArrayu;
     numberProcess = 5;
+
+
     calculate(processes);
+    clearQueue();
     //clearProcess(processes);
+
+
 
     return 0;
 }

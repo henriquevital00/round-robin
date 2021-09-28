@@ -1,45 +1,36 @@
 #include "../include/queue.h"
 
 Process *processArray;
-int rear = -1;
 int itemCount = 0;
 
-void createQueue()
-{
+void createQueue(){
     processArray = malloc(sizeof(Process) * numberProcess);
 }
 
-Process *first()
-{
+Process *first(){
     if (!isEmpty())
         return processArray;
     return NULL;
 }
 
-bool isEmpty()
-{
+bool isEmpty(){
     return itemCount == 0;
 }
 
-int size()
-{
+int size(){
     return itemCount;
 }
 
-void push(Process data)
-{
+void push(Process data){
     processArray[size()] = data;
     itemCount++;
 }
 
-Process pop()
-{
-    if (!isEmpty())
-    {
+Process pop(){
+    if (!isEmpty()){
         Process data = *(first());
 
-        for (int i = 0; i < size() - 1; i++)
-        {
+        for (int i = 0; i < size() - 1; i++){
             processArray[i] = processArray[i + 1];
         }
 
@@ -48,13 +39,15 @@ Process pop()
     }
 }
 
-void showQueue()
-{
+void showQueue(){
     printf("Fila: ");
-    for (int i = 0; i < size(); i++)
-    {
+    for (int i = 0; i < size(); i++){
         if (processArray[i].duration)
             printf("P%d (%d) - ", processArray[i].number, processArray[i].duration);
     }
     printf("\n");
+}
+
+void clearQueue(){
+  free(processArray);
 }

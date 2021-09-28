@@ -18,5 +18,6 @@ int size();
 void push(Process data);
 Process pop();
 void showQueue();
+void clearQueue();
 
 #endif
