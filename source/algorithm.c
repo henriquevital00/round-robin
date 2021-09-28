@@ -87,11 +87,7 @@ void onInsertAtTime(Process *processes, int time){
 
 /* QUANTUM */
 bool isQuantumOverflow(int quantum){
-    if (currentProcess()){
-        if (currentProcess()->quantumCount == quantum)
-            return true;
-    }
-    return false;
+    return currentProcess() ? currentProcess()->quantumCount == quantum : false;
 }
 
 void onOverflowQuantum(){
