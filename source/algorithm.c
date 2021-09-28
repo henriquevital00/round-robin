@@ -5,7 +5,7 @@
 /* UTILS */
 Process* (*currentProcess)() = first;
 
-void dequeueProcess(){
+void requeueProcess(){
     Process current = pop();
     current.quantumCount = 0;
     push(current);
@@ -46,7 +46,7 @@ void onExitProcess(int time, int *totalWaitTime){
 }
 
 /* INSERTION */
-bool isInserting(Process *processes, int time){
+bool isProcessArrive(Process *processes, int time){
     for (int n = 0; n < numberProcess; n++){
         if (processes[n].arrival == time)
             return true;
@@ -73,7 +73,7 @@ Process* getConcurrentProcessesSorted(Process* processes, int time, int* concurr
     return sortedProcesses;
 }
 
-void onInsertAtTime(Process *processes, int time){
+void onProcessArrive(Process *processes, int time){
     int concurrentsNumber = 0;
     Process* sortedProcesses = getConcurrentProcessesSorted(processes, time, &concurrentsNumber);
 
@@ -92,7 +92,7 @@ bool isQuantumOverflow(int quantum){
 
 void onOverflowQuantum(){
     printf("fim de quantum: P%d\n", currentProcess()->number);
-    dequeueProcess();
+    requeueProcess();
 }
 
 /* INTERRUPTION */
@@ -110,7 +110,7 @@ bool isInterrupting(){
 
 void onInterruptProcess(){
     printf("operação de I/O: P%d\n", currentProcess()->number);
-    dequeueProcess();
+    requeueProcess();
 }
 
 /* ALGORITHM */
@@ -122,18 +122,18 @@ void roundRobbin(Process *processes){
     for (int t = 0; t < totalDuration; t++){
         printf("\n\nTempo: %d - ", t);
 
-        bool hasInsertion = isInserting(processes, t);
+        bool hasProcessArriving = isProcessArrive(processes, t);
         bool hasInterruption = isInterrupting();
         bool hasQuantumOverflow = isQuantumOverflow(quantum);
 
-        if (hasInsertion && hasInterruption){
+        if (hasProcessArriving && hasInterruption){
             onInterruptProcess();
-            onInsertAtTime(processes, t);
+            onProcessArrive(processes, t);
         }
         else if (hasInterruption || (hasQuantumOverflow && hasInterruption))
             onInterruptProcess();
-        else if (hasInsertion)
-            onInsertAtTime(processes, t);
+        else if (hasProcessArriving)
+            onProcessArrive(processes, t);
         else if (hasQuantumOverflow)
             onOverflowQuantum();
 
