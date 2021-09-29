@@ -28,7 +28,7 @@ int calculateTotalDuration(Process *processes)
 
 void calculateProcessWaitTime(int *waitTimeArray)
 {
-    waitTimeArray[currentProcess()->number - 1] = (currentProcess()->finalTime - (currentProcess()->arrival + currentProcess()->startDuration));
+    waitTimeArray[currentProcess()->number - 1] = currentProcess()->finalTime - (currentProcess()->arrival + currentProcess()->startDuration);
 }
 
 void showWaitTimeAverage(int *waitTimeArray)
@@ -41,7 +41,7 @@ void showWaitTimeAverage(int *waitTimeArray)
         printf("P%d: %d ms\n", n + 1, waitTimeArray[n]);
         totalTime += waitTimeArray[n];
     }
-    float waitTimeAverage = (float)(totalTime) / (float)numberProcess;
+    float waitTimeAverage = (float)totalTime / (float)numberProcess;
     printf("\nTempo médio de espera = %.2f\n", waitTimeAverage);
     free(waitTimeArray);
 }
