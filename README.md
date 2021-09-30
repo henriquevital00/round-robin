@@ -39,9 +39,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## 💻 About The Project
-Project consists ...
-
-![app](https://github.com/henriquevital00/simulation-cpu/blob/master/images/app.gif)
+This project is a simulation of the [Round Robin algorithm](https://www.geeksforgeeks.org/round-robin-scheduling-with-different-arrival-times/).
 
 <!-- HOW TO RUN -->
 ## 🚀 How To Run
