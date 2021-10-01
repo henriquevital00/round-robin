@@ -10,6 +10,7 @@ typedef struct{
     int quantumCount;
     int startDuration;
     int finalTime;
+    int waitTime;
 } Process;
 
 int numberProcess;
