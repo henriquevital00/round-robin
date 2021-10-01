@@ -10,7 +10,7 @@ int main(){
     int quantum;
     printf("Digite o valor do quantum: ");
     scanf("%d", &quantum);
-    
+
     Process* processes = input();
     calculate(processes, quantum);
 

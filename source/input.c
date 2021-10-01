@@ -11,6 +11,7 @@ Process* input(){
         Process process;
         process.number = i + 1;
         process.quantumCount = 0;
+        process.waitTime = 0;
 
         printf("Criando o processo %d \n", i + 1);
         printf("Qual a duração do processo? \n");
