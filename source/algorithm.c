@@ -23,7 +23,7 @@ int calculateTotalDuration(Process *processes)
     int duration = 0;
     for (int i = 0; i < numberProcess; i++)
         duration += processes[i].duration;
-    return duration + 1;
+    return duration;
 }
 
 void calculateProcessWaitTime(Process *processes)
@@ -149,7 +149,7 @@ void roundRobbin(Process *processes, int quantum)
     printf("Quantum: %d\n", quantum);
     int totalDuration = calculateTotalDuration(processes);
 
-    for (int t = 0; t < totalDuration; t++)
+    for (int t = 0; t <= totalDuration; t++)
     {
         printf("\n\nTempo: %d - ", t);
 
