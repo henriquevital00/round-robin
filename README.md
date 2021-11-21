@@ -20,6 +20,7 @@
 
 <p align="center">
   <img alt="C" src="https://img.shields.io/badge/C-blue?style=for-the-badge&logo=c&logoColor=white"/>
+  <img alt="C" src="https://img.shields.io/badge/CPU-yellow?style=for-the-badge&logo=CPU&logoColor=white"/>
 </p>
 
 
@@ -40,6 +41,11 @@
 <!-- ABOUT THE PROJECT -->
 ## 💻 About The Project
 This project is a simulation of the [Round Robin algorithm](https://www.geeksforgeeks.org/round-robin-scheduling-with-different-arrival-times/).
+
+The user enters the processes contained in the CPU, as well as their arrival times, interruptions and quantum. From there the algorithm will run and display the scheduling sequence on the CPU.
+
+![app](https://github.com/antuniooh/simulation-cpu-round-robin/blob/main/app.gif)
+
 
 <!-- HOW TO RUN -->
 ## 🚀 How To Run
