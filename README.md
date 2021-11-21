@@ -43,7 +43,7 @@ This project is a simulation of the [Round Robin algorithm](https://www.geeksfor
 
 The user enters the processes contained in the CPU, as well as their arrival times, interruptions and quantum. From there the algorithm will run and display the scheduling sequence on the CPU.
 
-![app](https://github.com/antuniooh/robot-soccer-simulator/blob/master/images/app.gif)
+![app](https://github.com/antuniooh/simulation-cpu-round-robin/blob/main/app.gif)
 
 
 <!-- HOW TO RUN -->
