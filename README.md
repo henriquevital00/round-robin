@@ -20,6 +20,7 @@
 
 <p align="center">
   <img alt="C" src="https://img.shields.io/badge/C-blue?style=for-the-badge&logo=c&logoColor=white"/>
+  <img alt="C" src="https://img.shields.io/badge/CPU-yellow?style=for-the-badge&logo=CPU&logoColor=white"/>
 </p>
 
 
